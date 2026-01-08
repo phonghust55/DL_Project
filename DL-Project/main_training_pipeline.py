@@ -1,12 +1,3 @@
-"""
-Main Training Pipeline for UNSW-NB15 Intrusion Detection.
-
-This pipeline now includes:
-1. Traditional ML: Logistic Regression (baseline)
-2. Shallow Neural Network: MLPClassifier from sklearn
-3. Deep Learning: Deep Neural Network with TensorFlow/Keras
-"""
-
 import os
 import warnings
 
@@ -378,7 +369,7 @@ def main():
     best_idx = summary["f1"].idxmax()
     best_model = summary.loc[best_idx, "Model"]
     best_f1 = summary.loc[best_idx, "f1"]
-    print(f"\n🏆 Best Model (by F1-score): {best_model} with F1={best_f1:.4f}")
+    print(f"\nBest Model (by F1-score): {best_model} with F1={best_f1:.4f}")
 
 
 if __name__ == "__main__":
