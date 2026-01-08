@@ -19,7 +19,6 @@ from sklearn.pipeline import Pipeline
 
 import preprocess
 import utils
-from logistic_regression_model import create_logistic_regression, param_grid as lr_param_grid
 from neural_network import create_fnn, param_grid as fnn_param_grid
 from deep_neural_network import DNNClassifier, get_model_configs
 
@@ -29,16 +28,13 @@ warnings.filterwarnings("ignore", category=UserWarning)
 
 RANDOM_STATE = 42
 
-# Get the directory where this script is located
+
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 PLOTS_DIR = os.path.join(SCRIPT_DIR, "plots")
 
 
 def load_for_training(resplit_if_one_class: bool = True):
-    """
-    Load raw train/test from UNSW files.
-    If train has only 1 class and resplit_if_one_class=True, combine and stratified split.
-    """
+    
     train_df, test_df = preprocess.load_raw_data()
 
     if "label" not in train_df.columns or "label" not in test_df.columns:
@@ -280,34 +276,13 @@ def main():
     results = []
 
     # =========================================================================
-    # PART 1: Traditional Machine Learning (Baseline)
-    # =========================================================================
-    print("\n" + "=" * 80)
-    print("PART 1: TRADITIONAL MACHINE LEARNING")
-    print("=" * 80)
-
-    # 1) Linear Logistic Regression
-    lr = create_logistic_regression(random_state=RANDOM_STATE)
-    lr_pipe = build_pipeline(preprocessor, lr)
-    lr_metrics, lr_best = tune_and_eval(
-        "Linear Logistic Regression",
-        lr_pipe,
-        lr_param_grid(),
-        X_train,
-        y_train,
-        X_test,
-        y_test,
-    )
-    results.append({"Model": "Linear Logistic Regression", "Type": "Traditional ML", **lr_metrics, "best_params": str(lr_best)})
-
-    # =========================================================================
-    # PART 2: Shallow Neural Network (sklearn MLP)
+    # PART 1: Shallow Neural Network (sklearn MLP)
     # =========================================================================
     print("\n" + "=" * 80)
     print("PART 2: SHALLOW NEURAL NETWORK (sklearn)")
     print("=" * 80)
 
-    # 2) FNN using sklearn MLPClassifier
+    # FNN using sklearn MLPClassifier
     fnn = create_fnn(random_state=RANDOM_STATE)
     fnn_pipe = build_pipeline(preprocessor, fnn)
     fnn_metrics, fnn_best = tune_and_eval(
@@ -322,13 +297,12 @@ def main():
     results.append({"Model": "FNN (MLPClassifier)", "Type": "Shallow NN", **fnn_metrics, "best_params": str(fnn_best)})
 
     # =========================================================================
-    # PART 3: DEEP LEARNING (TensorFlow/Keras)
+    # PART 2: DEEP LEARNING (TensorFlow/Keras)
     # =========================================================================
     print("\n" + "=" * 80)
     print("PART 3: DEEP LEARNING (TensorFlow/Keras)")
     print("=" * 80)
 
-    # Preprocess data for deep learning (Keras models don't use sklearn pipeline)
     preprocessor.fit(X_train)
     X_train_processed = preprocessor.transform(X_train)
     X_test_processed = preprocessor.transform(X_test)
@@ -344,7 +318,7 @@ def main():
     # Get model configurations
     model_configs = get_model_configs()
 
-    # 3) Deep Neural Network - Medium (Default)
+    # 1) Deep Neural Network - Medium (Default)
     dnn_config = model_configs["DNN_Medium"]
     dnn_config["epochs"] = 50  # Adjust for faster training
     dnn_config["batch_size"] = 256
@@ -364,7 +338,7 @@ def main():
         "best_params": str(dnn_config),
     })
 
-    # 4) Deep Neural Network with Residual Connections
+    # 2) Deep Neural Network with Residual Connections
     residual_config = model_configs["DNN_Residual"]
     residual_config["epochs"] = 50
     residual_config["batch_size"] = 256

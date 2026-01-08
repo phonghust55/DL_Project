@@ -1,0 +1,4 @@
+Model,Type,accuracy,precision,recall,f1,auc,avg_precision,best_params
+FNN (MLPClassifier),Shallow NN,0.87,0.7832699619771863,0.9074889867841409,0.8408163265306122,0.9386862089735565,0.8887854188068801,"{'model__alpha': 0.001, 'model__hidden_layer_sizes': (128, 64, 32), 'model__learning_rate_init': 0.001}"
+Deep Neural Network (Keras),Deep Learning,0.8783333333333333,0.7769784172661871,0.9515418502202643,0.8554455445544554,0.9542877726730522,0.9175839498306242,"{'hidden_layers': (512, 256, 128, 64, 32), 'dropout_rate': 0.3, 'l2_reg': 0.0001, 'epochs': 50, 'batch_size': 256}"
+Residual DNN (Keras),Deep Learning,0.8666666666666667,0.7578947368421053,0.9515418502202643,0.84375,0.9495990362697972,0.9148706676158626,"{'hidden_layers': (256, 128, 64), 'dropout_rate': 0.3, 'l2_reg': 0.0001, 'use_residual': True, 'epochs': 50, 'batch_size': 256}"
